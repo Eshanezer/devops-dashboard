@@ -11,25 +11,6 @@ platform engineering practices.
 ## 🎯 Project Goals
 
 - Provide a single view of system health and delivery status
-- Simulate real internal DevOps tooling used in production environments
-- Demonstrate CI/CD, containerization, and environment awareness
-- Serve as a long-term evolving portfolio project
-
----
-
-## 🧩 Managed Services
-
-# DevOps Dashboard
-
-A lightweight internal DevOps dashboard that centralizes service health, CI/CD
-status, environment metadata, and release information across multiple services.
-
-This project is designed to evolve incrementally, following real-world DevOps
-and platform engineering practices.
-
-## 🎯 Project Goals
-
-- Provide a single view of system health and delivery status
 - Simulate internal DevOps tooling used in production environments
 - Demonstrate CI/CD, containerization, and environment awareness
 - Serve as a long-term evolving portfolio project
@@ -80,15 +61,15 @@ Simple ASCII view:
   frontend.
 - Pipelines run on pushes to the main branch.
 
-## 🐳 Local Development (Planned)
+## 🐳 Docker-First Development
 
-The project will include a `docker-compose.yml` to run the frontend and backend
-locally.
+This project is fully containerized. All services (frontend and backend) are
+developed and run inside Docker containers.
 
-Start the development stack:
+### Start the entire system
 
 ```bash
-docker compose up
+docker compose -f infra/docker-compose.yml up
 ```
 
 ## 🚀 Deployment (Planned)
