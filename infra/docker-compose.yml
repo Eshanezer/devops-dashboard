@@ -1,0 +1,104 @@
+
+services:
+
+  # =========================
+  # Backend Service (Laravel)
+  # =========================
+  backend:
+    # Build the backend image using backend/Dockerfile
+    build: ../backend
+
+    # Name the container using the project name from .env
+    container_name: ${PROJECT_NAME}-backend
+
+    # Set the working directory inside the container
+    # Laravel source code lives here
+    working_dir: /var/www
+
+    # Mount backend source code into the container
+    # Enables live code updates without rebuilding the image
+    volumes:
+      - ../backend/src:/var/www
+
+    # Expose Laravel HTTP server to the host
+    # HOST:CONTAINER
+    # Example: localhost:8080 → container:8000
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_CONTAINER_PORT}"
+
+    # Load environment variables from root .env file
+    env_file:
+      - .env
+
+    # Ensure MySQL container starts before backend
+    depends_on:
+      - mysql
+
+
+  # =========================
+  # Frontend Service (Vue 3)
+  # =========================
+  frontend:
+    # Build the frontend image using frontend/Dockerfile
+    build: ../frontend
+
+    # Name the frontend container
+    container_name: ${PROJECT_NAME}-frontend
+
+    # Working directory inside the container
+    working_dir: /app
+
+    # Mount Vue source code into the container
+    # Enables hot reload during development
+    volumes:
+      - ../frontend/src:/app
+
+    # Expose Vite dev server to the host
+    # Default Vite port is 5173
+    ports:
+      - "${FRONTEND_PORT}:5173"
+
+    # Environment variables passed to the Vue app
+    # Used at build/runtime by Vite
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+
+    # Start frontend only after backend is running
+    depends_on:
+      - backend
+
+
+  # =========================
+  # Database Service (MySQL)
+  # =========================
+  mysql:
+    # Use official MySQL 8 image
+    image: mysql:8.0
+
+    # Name the MySQL container
+    container_name: ${PROJECT_NAME}-mysql
+
+    # Restart automatically if the container crashes
+    restart: always
+
+    # Expose MySQL port (optional, useful for DB tools)
+    ports:
+      - "${MYSQL_HOST_PORT}:3306"
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    # Persist database data using a named volume
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+
+# =========================
+# Persistent Volumes
+# =========================
+volumes:
+  mysql_data:
+    # Stores MySQL data outside the container lifecycle

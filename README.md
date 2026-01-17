@@ -55,6 +55,19 @@ Simple ASCII view:
                           +----------------+
 ```
 
+Browser
+ ├── http://localhost:5173  → Vue Frontend
+ └── http://localhost:8080  → Laravel Backend
+
+Vue Container
+ └── calls http://backend:8000/api/dashboard
+
+Laravel Container
+ └── connects to mysql:3306
+
+MySQL Container
+ └── stores persistent data
+
 ## 🔁 CI/CD Overview
 
 - GitHub Actions runs linting, tests, and build validation for backend and
@@ -69,7 +82,7 @@ developed and run inside Docker containers.
 ### Start the entire system
 
 ```bash
-docker compose -f infra/docker-compose.yml up
+docker compose -f infra/docker-compose.yml up --build
 ```
 
 ## 🚀 Deployment (Planned)
