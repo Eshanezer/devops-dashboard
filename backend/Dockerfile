@@ -33,6 +33,11 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 # It always runs when the container starts
 ENTRYPOINT ["docker-entrypoint.sh"]
 
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD curl -f http://localhost:8000/api/health || exit 1
+
 # CMD defines the default command that ENTRYPOINT will execute
 # This starts the Laravel development server
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+

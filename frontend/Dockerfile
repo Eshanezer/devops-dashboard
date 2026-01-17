@@ -9,6 +9,9 @@ WORKDIR /app
 # This documents that the container listens on port 5173
 EXPOSE 5173
 
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD curl -f http://localhost/ || exit 1
+
 # Default command executed when the container starts:
 # 1. Install npm dependencies inside the container
 # 2. Start the Vite dev server
